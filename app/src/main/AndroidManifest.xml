@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.wehearyou">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.WeHearYou">
+        <activity android:name=".Others.FeedbackActivity"></activity>
+        <activity android:name=".DedicatedChatsUI.DedicatedChatSeekerFeedbackActivity" />
+        <activity android:name=".BecomeListenerFailureActivity" />
+        <activity android:name=".Others.AgeChangeActivity" />
+        <activity android:name=".FindListenerUI.CurrentFeelingActivity" />
+        <activity android:name=".BecomeListenerUI.BecomeListenerSuccessfulActivity" />
+        <activity android:name=".BecomeListenerUI.BecomeListenerQuestion4Activity" />
+        <activity android:name=".BecomeListenerUI.BecomeListenerQuestion3Activity" />
+        <activity android:name=".BecomeListenerUI.BecomeListenerQuestion2Activity" />
+        <activity android:name=".BecomeListenerUI.BecomeListenerQuestion1Activity" />
+        <activity android:name=".BecomeListenerUI.BecomeListenerTopicsActivity" />
+        <activity android:name=".BecomeListenerUI.BecomeListenerInfoActivity" />
+        <activity android:name=".DedicatedChatsUI.DedicatedChattingActivity" />
+        <activity android:name=".DedicatedChatsUI.DedicatedChatsActivity" />
+        <activity android:name=".JournalUI.JournalChatViewActivity" />
+        <activity android:name=".JournalUI.JournalChatDetailsActivity" />
+        <activity android:name=".JournalUI.JournalActivity" />
+        <activity android:name=".FindListenerUI.ListenerChatEndedActivity" />
+        <activity android:name=".FindListenerUI.SeekerChatReviewActivity" />
+        <activity android:name=".FindListenerUI.MatchingExitFeedbackActivity" />
+        <activity android:name=".TherapiesUI.TherapyBookingHistoryUI.TherapyBookingsActivity" />
+        <activity android:name=".TherapiesUI.TherapyBookingUI.TherapyBookingSuccessfulActivity" />
+        <activity android:name=".TherapiesUI.TherapyBookingUI.TherapyDetailsActivity" />
+        <activity android:name=".TherapiesUI.TherapyBookingUI.TherapiesActivity" />
+        <activity android:name=".ListenerRequestsUI.ListenerRequestsActivity" />
+        <activity android:name=".ChatUI.ChatActivity" />
+        <activity android:name=".CallsUI.CallBookingUI.CallBookingSuccessfulActivity" />
+        <activity android:name=".CallsUI.CallBookingUI.CallBookingAfterPaymentActivity" />
+        <activity android:name=".CallsUI.CallBookingUI.CallBookingBeforePaymentActivity" />
+        <activity android:name=".CallsUI.CallHistoryUI.CallHistoryActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".FindListenerUI.RequestAcceptedActivity" />
+        <activity android:name=".FindListenerUI.MatchingActivity" />
+        <activity android:name=".FindListenerUI.AgeSelectionActivity" />
+        <activity android:name=".FindListenerUI.TopicSelectionUI.TopicSelectionActivity" />
+        <activity android:name=".LoginUI.LoginDetailsCollectionActivity" />
+        <activity android:name=".ListenerDashboardActivity" />
+        <activity android:name=".SeekerDashboardActivity" />
+        <activity android:name=".LoginUI.LoginOtpActivity" />
+        <activity android:name=".LoginUI.LoginMainActivity" />
+        <activity android:name=".SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="rzp_live_qn0G40omXlC5v1" />
+
+        <service
+            android:name=".Notifications.FirebaseMessagingService"
+            android:enabled="true"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/notification" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/white" />
+    </application>
+
+</manifest>
