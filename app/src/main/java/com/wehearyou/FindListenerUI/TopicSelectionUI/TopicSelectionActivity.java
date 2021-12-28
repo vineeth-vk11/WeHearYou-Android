@@ -82,8 +82,6 @@ public class TopicSelectionActivity extends AppCompatActivity {
 
                 if(documentSnapshot.exists()){
 
-                    Log.i("exists","1");
-
                     if(documentSnapshot.getString("minAge") != null){
                         minAge = Integer.parseInt(documentSnapshot.getString("minAge"));
                         ageGroupExists = true;
@@ -124,7 +122,6 @@ public class TopicSelectionActivity extends AppCompatActivity {
                 }
 
                 Collections.sort(topicsModelArrayList,new TopicsModel());
-                Log.i("exists1", String.valueOf(ageGroupExists));
 
                 topicsAdapter = new TopicsAdapter(topicsModelArrayList, getApplicationContext(), minAge, maxAge, ageGroupExists, userName, activity);
                 topicsRecycler.setAdapter(topicsAdapter);

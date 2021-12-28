@@ -50,9 +50,6 @@ public class AgeChangeActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                Log.i("age",
-                        "1");
-
                 DocumentSnapshot documentSnapshot = task.getResult();
 
                 if(documentSnapshot.getString("minAge") != null){

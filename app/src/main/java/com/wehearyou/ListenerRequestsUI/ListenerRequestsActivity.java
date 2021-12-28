@@ -84,23 +84,21 @@ public class ListenerRequestsActivity extends AppCompatActivity {
                                 requestsModel.setTopic(documentSnapshot.getString("topic"));
                                 requestsModel.setUser(documentSnapshot.getString("user"));
 
-                                topic = documentSnapshot.getString("topic");
-                                minAge = (int) ((long)documentSnapshot.get("minAge"));
-                                maxAge = (int) ((long)documentSnapshot.get("maxAge"));
+//                                topic = documentSnapshot.getString("topic");
+//                                minAge = (int) ((long)documentSnapshot.get("minAge"));
+//                                maxAge = (int) ((long)documentSnapshot.get("maxAge"));
 
-                                Log.i("topic",topic);
-                                Log.i("topics",String.valueOf(topics));
+                                requestsModelArrayList.add(requestsModel);
 
-                                if(age>= minAge && age <= maxAge){
-                                    if(topics != null){
-                                        if(topics.contains(topic)){
-                                            requestsModelArrayList.add(requestsModel);
-                                        }
-                                    }
-                                    else {
-                                        requestsModelArrayList.add(requestsModel);
-                                    }
-                                }
+//                                if(age>= minAge && age <= maxAge){
+//                                    if(topics != null){
+//                                        if(topics.contains(topic)){
+//                                            requestsModelArrayList.add(requestsModel);
+//                                        }
+//                                    }
+//                                    else {
+//                                    }
+//                                }
 
                             }
 

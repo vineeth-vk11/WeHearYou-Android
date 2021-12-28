@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
@@ -17,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WeHearYou">
-        <activity android:name=".Others.FeedbackActivity"></activity>
+        <activity android:name=".FindListenerUI.ReportSeekerActivity"></activity>
+        <activity android:name=".Others.FeedbackActivity" />
         <activity android:name=".DedicatedChatsUI.DedicatedChatSeekerFeedbackActivity" />
         <activity android:name=".BecomeListenerFailureActivity" />
         <activity android:name=".Others.AgeChangeActivity" />
@@ -109,6 +109,10 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/white" />
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+
     </application>
 
 </manifest>

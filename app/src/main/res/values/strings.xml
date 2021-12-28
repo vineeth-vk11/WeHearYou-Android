@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">W.H.Y</string>
 
-    <string name="facebook_app_id">388055675697256</string>
-    <string name="fb_login_protocol_scheme">fb388055675697256</string>
+    <string name="fb_login_protocol_scheme">fb602227320932476</string>
+    <string name="facebook_app_id">602227320932476</string>
+    <string name="facebook_client_token">d4ec13f704c1edd495a43e7e4c22696e</string>
 
     <string-array name="CountryCodes">
         <item>93,AF</item>

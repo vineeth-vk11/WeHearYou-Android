@@ -5,8 +5,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -19,6 +22,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.wehearyou.DedicatedChatsUI.DedicatedChatsActivity;
 import com.wehearyou.FindListenerUI.TopicSelectionUI.TopicSelectionActivity;
@@ -32,6 +36,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.prefs.PreferenceChangeEvent;
 
 public class ListenerDashboardActivity extends AppCompatActivity {
 
@@ -50,10 +55,32 @@ public class ListenerDashboardActivity extends AppCompatActivity {
 
     MixpanelAPI mixpanel;
 
+    ArrayList<String> topics1 = new ArrayList<>();
+
+    public static final String MyPREFERENCES = "WHY_PREFS";
+    SharedPreferences sharedpreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listener_dashboard);
+
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+        topics1.add("AcademicPressure");
+        topics1.add("Bullying");
+        topics1.add("COVID19");
+        topics1.add("HealthIssues");
+        topics1.add("IJustWantToTalk");
+        topics1.add("LGBTQ&Identity");
+        topics1.add("Loneliness");
+        topics1.add("LowEnergy");
+        topics1.add("MotivationAndConfidence");
+        topics1.add("Overthinking");
+        topics1.add("Parenting");
+        topics1.add("RelationShips");
+        topics1.add("Sleep");
+        topics1.add("WorkAndProductivity");
 
         mixpanel = MixpanelAPI.getInstance(this, "d1729e123d88f668650b9197c333f789\n");
 
@@ -74,11 +101,7 @@ public class ListenerDashboardActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot documentSnapshot = task.getResult();
 
-                Log.i("topic","ok1");
-
                 if(documentSnapshot.exists()){
-
-                    Log.i("topic","ok2");
 
                     if(documentSnapshot.getString("age") != null){
                         age = Integer.parseInt(documentSnapshot.getString("age"));
@@ -99,23 +122,21 @@ public class ListenerDashboardActivity extends AppCompatActivity {
 
                             for(DocumentSnapshot documentSnapshot: value.getDocuments()){
 
-                                topic = documentSnapshot.getString("topic");
-                                minAge = (int) ((long)documentSnapshot.get("minAge"));
-                                maxAge = (int) ((long)documentSnapshot.get("maxAge"));
+//                                topic = documentSnapshot.getString("topic");
+//                                minAge = (int) ((long)documentSnapshot.get("minAge"));
+//                                maxAge = (int) ((long)documentSnapshot.get("maxAge"));
 
-                                Log.i("topic",topic);
-                                Log.i("topics",String.valueOf(topics));
+                                totalRequests += 1;
 
-                                if(age>= minAge && age <= maxAge){
-                                    if(topics != null){
-                                        if(topics.contains(topic)){
-                                            totalRequests += 1;
-                                        }
-                                    }
-                                    else {
-                                        totalRequests += 1;
-                                    }
-                                }
+//                                if(age>= minAge && age <= maxAge){
+//                                    if(topics != null){
+//                                        if(topics.contains(topic)){
+//                                        }
+//                                    }
+//                                    else {
+//                                        totalRequests += 1;
+//                                    }
+//                                }
 
                             }
                             number.setText(String.valueOf(totalRequests));
@@ -125,7 +146,24 @@ public class ListenerDashboardActivity extends AppCompatActivity {
             }
         });
 
+        if(!sharedpreferences.getBoolean("isNotificationSubscribed", false)){
 
+            Log.i("subscribing", "now");
+
+            for(int i = 0; i<topics1.size();i++){
+                int finalI = i;
+                FirebaseMessaging.getInstance().subscribeToTopic(topics1.get(i)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(finalI == topics1.size() - 1){
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.putBoolean("isNotificationSubscribed", true);
+                            editor.apply();
+                        }
+                    }
+                });
+            }
+        }
 
         findListener.setOnClickListener(new View.OnClickListener() {
             @Override

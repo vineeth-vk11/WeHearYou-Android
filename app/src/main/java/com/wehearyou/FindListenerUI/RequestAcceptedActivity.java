@@ -59,8 +59,6 @@ public class RequestAcceptedActivity extends AppCompatActivity {
         feeling = intent.getStringExtra("feeling");
         onMind = intent.getStringExtra("onMind");
 
-        Log.i("id",listenerId);
-
         db.collection("Listeners").document(listenerId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

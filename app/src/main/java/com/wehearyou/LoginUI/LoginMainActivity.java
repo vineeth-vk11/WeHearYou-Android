@@ -21,6 +21,8 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -277,6 +279,9 @@ public class LoginMainActivity extends AppCompatActivity {
     private void redirect(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
+
+            AppEventsLogger logger = AppEventsLogger.newLogger(getApplicationContext());
+            logger.logEvent("Loggedin");
 
             db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override

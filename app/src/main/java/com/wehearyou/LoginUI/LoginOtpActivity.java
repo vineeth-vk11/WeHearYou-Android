@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -194,6 +195,9 @@ public class LoginOtpActivity extends AppCompatActivity {
     private void redirect(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
+
+            AppEventsLogger logger = AppEventsLogger.newLogger(getApplicationContext());
+            logger.logEvent("Loggedin");
 
             db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override

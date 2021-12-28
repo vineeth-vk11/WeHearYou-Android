@@ -86,8 +86,6 @@ public class BecomeListenerQuestion2Activity extends AppCompatActivity {
                         correctAnswers += 1;
                     }
 
-                    Log.i("answers",String.valueOf(correctAnswers));
-
                     Intent intent = new Intent(getApplicationContext(), BecomeListenerQuestion3Activity.class);
                     intent.putExtra("correctAnswers", correctAnswers);
                     intent.putExtra("firstName", firstName);

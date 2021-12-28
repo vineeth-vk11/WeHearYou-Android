@@ -16,6 +16,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -93,6 +95,10 @@ public class LoginDetailsCollectionActivity extends AppCompatActivity {
                     db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+
+                            AppEventsLogger logger = AppEventsLogger.newLogger(getApplicationContext());
+                            logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
+
                             Intent intent = new Intent(getApplicationContext(), SeekerDashboardActivity.class);
                             startActivity(intent);
                             finish();

@@ -23,7 +23,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     public static final int MSG_TYPE_LEFT = 0;
     public static final int MSG_TYPE_RIGHT = 1;
 
-    FirebaseDatabase db;
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     FirebaseUser firebaseUser;
 
     public MessageAdapter(Context context, ArrayList<MessageModel> messageModelArrayList) {

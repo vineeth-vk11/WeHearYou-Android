@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "349911897247",
+    "firebase_url": "https://wehearyou-c9eb8-default-rtdb.firebaseio.com",
     "project_id": "wehearyou-c9eb8",
     "storage_bucket": "wehearyou-c9eb8.appspot.com"
   },
@@ -14,11 +15,43 @@
       },
       "oauth_client": [
         {
+          "client_id": "349911897247-1f52vlhr4c5jlp5qd8q88g3ni7od2ntj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wehearyou",
+            "certificate_hash": "e7f1540c4789585188488f029176c201c503ad80"
+          }
+        },
+        {
+          "client_id": "349911897247-1lcq6u8kgppqcao5nk76ub1ac66upk2s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wehearyou",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "349911897247-2t5sai6mrtffmopptebl92u0lumm1ok2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wehearyou",
+            "certificate_hash": "225e01a3ffe235e588c0ea642a9935425632ce5d"
+          }
+        },
+        {
           "client_id": "349911897247-30bod4l5u5fp9t3l0hijq2ul660jbueb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.wehearyou",
             "certificate_hash": "8481498d744f894a6dbe670ac530e382491ef038"
+          }
+        },
+        {
+          "client_id": "349911897247-68b3hijpofandijvr4mic6cq44il9dbt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wehearyou",
+            "certificate_hash": "969362214bd3394555da597a4442b4383b22420b"
           }
         },
         {
@@ -37,6 +70,13 @@
             {
               "client_id": "349911897247-d1kv84jl26vkkv87hs30csi8cprivb5k.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "349911897247-4i4cb4kgvp55bslb9n08br4d7d2oi7cb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.wehearyou"
+              }
             }
           ]
         }

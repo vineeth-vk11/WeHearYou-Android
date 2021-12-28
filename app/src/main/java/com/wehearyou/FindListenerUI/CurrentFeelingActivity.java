@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -51,6 +53,8 @@ public class CurrentFeelingActivity extends AppCompatActivity {
 
     MixpanelAPI mixpanel;
 
+    ProgressBar progressBar;
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -78,8 +82,7 @@ public class CurrentFeelingActivity extends AppCompatActivity {
         feelings = findViewById(R.id.radioGroup);
         findListener = findViewById(R.id.getStarted);
         mind = findViewById(R.id.mind_edit);
-
-        Log.i("topic", topic);
+        progressBar = findViewById(R.id.progressBar2);
 
         if(topic.trim().equals("Academic Pressure")){
             token = "/topics/AcademicPressure";
@@ -128,6 +131,9 @@ public class CurrentFeelingActivity extends AppCompatActivity {
         findListener.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                progressBar.setVisibility(View.VISIBLE);
+                findListener.setEnabled(false);
 
                 int selectedFeeling = feelings.getCheckedRadioButtonId();
 
@@ -210,18 +216,27 @@ public class CurrentFeelingActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
 
-                                            Log.i("token",token);
+                                            db.collection("Keys").document("FCM").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                                            FcmNotificationsSender fcmNotificationsSender = new FcmNotificationsSender(token,"New Request", "You have a new request", getApplicationContext(), CurrentFeelingActivity.this);
+                                                    String key = task.getResult().getString("key");
 
-                                            fcmNotificationsSender.SendNotifications();
+                                                    progressBar.setVisibility(View.GONE);
+                                                    findListener.setEnabled(true);
 
-                                            Intent intent = new Intent(getApplicationContext(), MatchingActivity.class);
-                                            intent.putExtra("chatId", chatId);
-                                            intent.putExtra("feeling",feeling);
-                                            intent.putExtra("onMind",enteredOnMind);
-                                            startActivity(intent);
-                                            finish();
+                                                    FcmNotificationsSender fcmNotificationsSender = new FcmNotificationsSender(key, token,"New Request", "You have a new request", getApplicationContext(), CurrentFeelingActivity.this);
+
+                                                    fcmNotificationsSender.SendNotifications();
+
+                                                    Intent intent = new Intent(getApplicationContext(), MatchingActivity.class);
+                                                    intent.putExtra("chatId", chatId);
+                                                    intent.putExtra("feeling",feeling);
+                                                    intent.putExtra("onMind",enteredOnMind);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }
+                                            });
                                         }
                                     });
                                 }

@@ -56,7 +56,6 @@ public class MatchingActivity extends AppCompatActivity {
         db.collection("Chats").document(chatId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                Log.i("called","now");
                 if(value.exists()){
                     String listener = value.getString("listener");
                     String topic = value.getString("topic");

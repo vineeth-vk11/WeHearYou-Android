@@ -11,6 +11,7 @@ import android.app.DirectAction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +40,7 @@ import com.wehearyou.ChatUI.SupportHelper.MessageAdapter;
 import com.wehearyou.ChatUI.SupportHelper.MessageModel;
 import com.wehearyou.FindListenerUI.ListenerChatEndedActivity;
 import com.wehearyou.FindListenerUI.MatchingActivity;
+import com.wehearyou.FindListenerUI.ReportSeekerActivity;
 import com.wehearyou.FindListenerUI.RequestAcceptedActivity;
 import com.wehearyou.FindListenerUI.SeekerChatReviewActivity;
 import com.wehearyou.R;
@@ -67,10 +70,12 @@ public class ChatActivity extends AppCompatActivity {
     ImageButton seekerButton, listenerButton;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
     String feeling, onMind;
 
     MixpanelAPI mixpanel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +107,8 @@ public class ChatActivity extends AppCompatActivity {
             String sentUserFinal = FirebaseAuth.getInstance().getCurrentUser().getUid();
             String receivedUserFinal = listener;
 
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-            DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference databaseReference = firebaseDatabase.getReference();
+            DatabaseReference databaseReference1 = firebaseDatabase.getReference();
 
             HashMap<String , Object> message = new HashMap<>();
             message.put("message",messageSent);
@@ -148,11 +153,24 @@ public class ChatActivity extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Chats");
+
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("Chats").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(chatId);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                getMessages();
+                messageModelArrayList.clear();
+                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                    MessageModel messageModel = new MessageModel();
+                    messageModel.setMessage(dataSnapshot.child("message").getValue().toString());
+                    messageModel.setSentUser(dataSnapshot.child("sentUser").getValue().toString());
+                    messageModel.setReceivedUser(dataSnapshot.child("receivedUser").getValue().toString());
+
+                    messageModelArrayList.add(messageModel);
+                }
+
+                MessageAdapter messageAdapter = new MessageAdapter(getApplicationContext(),messageModelArrayList);
+                recyclerView.setAdapter(messageAdapter);
+                recyclerView.getLayoutManager().scrollToPosition(messageModelArrayList.size()-1);
             }
 
             @Override
@@ -281,31 +299,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void getMessages() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Chats").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(chatId);
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                messageModelArrayList.clear();
-                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
-                    MessageModel messageModel = new MessageModel();
-                    messageModel.setMessage(dataSnapshot.child("message").getValue().toString());
-                    messageModel.setSentUser(dataSnapshot.child("sentUser").getValue().toString());
-                    messageModel.setReceivedUser(dataSnapshot.child("receivedUser").getValue().toString());
-
-                    messageModelArrayList.add(messageModel);
-                }
-
-                MessageAdapter messageAdapter = new MessageAdapter(getApplicationContext(),messageModelArrayList);
-                recyclerView.setAdapter(messageAdapter);
-                recyclerView.getLayoutManager().scrollToPosition(messageModelArrayList.size()-1);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 
     private void sendMessage() {
@@ -328,15 +322,21 @@ public class ChatActivity extends AppCompatActivity {
             return;
         }
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference databaseReference = firebaseDatabase.getReference();
+        DatabaseReference databaseReference1 = firebaseDatabase.getReference();
 
         HashMap<String , Object> message = new HashMap<>();
         message.put("message",messageSent);
         message.put("sentUser",sentUserFinal);
         message.put("receivedUser",receivedUserFinal);
 
-        databaseReference.child("Chats").child(sentUserFinal).child(chatId).push().setValue(message);
+        databaseReference.child("Chats").child(sentUserFinal).child(chatId).push().setValue(message).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("Error", String.valueOf(e));
+            }
+        });
+
         databaseReference1.child("Chats").child(receivedUserFinal).child(chatId).push().setValue(message);
 
         txtMessage.setText("");
@@ -589,7 +589,67 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        bottomSheetView.findViewById(R.id.reportSeeker).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+                new AlertDialog.Builder(ChatActivity.this)
+                        .setTitle("Report Seeker")
+                        .setMessage("Are you sure you want to report the seeker?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                JSONObject props = new JSONObject();
+                                try {
+                                    props.put("Mobile Number", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                mixpanel.track("Report Seeker Event", props);
+
+                                String date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+
+                                HashMap<String, Object> data1 = new HashMap<>();
+                                data1.put("listenerName",listenerName);
+                                data1.put("listener",listener);
+                                data1.put("topic",topic);
+                                data1.put("date",date);
+                                data1.put("chatId",chatId);
+
+                                db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("Journal").add(data1).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                                        HashMap<String, Object> data = new HashMap<>();
+                                        data.put("isClosedByListener", true);
+
+                                        db.collection("Chats").document(chatId).update(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Intent intent = new Intent(getApplicationContext(), ReportSeekerActivity.class);
+                                                intent.putExtra("listenerId",listener);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        }).show();
+            }
+        });
+
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }
